@@ -1,13 +1,16 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"ginchat/router"
+	"ginchat/utils"
+)
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run()
+	utils.InitConfig()
+	utils.InitMySQL()
+
+	r := router.Router()
+	fmt.Println("Start :8080")
+	r.Run(":8080")
 }

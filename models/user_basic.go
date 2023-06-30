@@ -1,6 +1,11 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"ginchat/utils"
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type UserBasic struct {
 	gorm.Model
@@ -11,12 +16,18 @@ type UserBasic struct {
 	Email      string
 	ClientIp   string
 	ClientPort string
-	LoginTime  uint64
-	LogoutTime uint64
+	LoginTime  time.Time
+	LogoutTime time.Time
 	IsLogout   bool
 	DeviceId   string
 }
 
 func (table *UserBasic) TableName() string {
 	return "user_basic"
+}
+
+func GetUserList() []*UserBasic {
+	userBasic := make([]*UserBasic, 10)
+	utils.Db.Find(&userBasic)
+	return userBasic
 }
