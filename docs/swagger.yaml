@@ -1,0 +1,26 @@
+info:
+  contact: {}
+paths:
+  /index:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      tags:
+      - index
+  /user/getUser:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: message"}
+          schema:
+            type: string
+      tags:
+      - getUser
+swagger: "2.0"
