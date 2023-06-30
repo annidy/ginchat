@@ -20,7 +20,7 @@ func InitConfig() {
 }
 
 func InitMySQL() {
-	db, err := gorm.Open(mysql.Open("root:1234@tcp(127.0.0.1:3306)/ginchat?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open("root:1234@tcp(mysql8019:3306)/ginchat?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
