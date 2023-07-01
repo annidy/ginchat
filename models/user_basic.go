@@ -13,8 +13,8 @@ type UserBasic struct {
 	Identity   string
 	Name       string
 	Password   string
-	Phone      string
-	Email      string
+	Phone      string `valid:"matches(^1[0-9]{10}$)"`
+	Email      string `valid:"email"`
 	ClientIp   string
 	ClientPort string
 	LoginTime  time.Time
@@ -28,8 +28,13 @@ func (table *UserBasic) TableName() string {
 }
 
 func (user *UserBasic) BeforeCreate(tx *gorm.DB) error {
+	if FindUserByName(user.Name) != nil {
+		return fmt.Errorf("user name %s already exists", user.Name)
+	}
+	if FindUserByPhone(user.Phone) != nil {
+		return fmt.Errorf("user phone %s already exists", user.Phone)
+	}
 	user.LoginTime = time.Now()
-	fmt.Println("before create", user)
 	return nil
 }
 
@@ -53,4 +58,12 @@ func DeleteUser(user *UserBasic) *gorm.DB {
 
 func UpdateUser(user *UserBasic) *gorm.DB {
 	return utils.Db.Save(user)
+}
+
+func FindUserByName(name string) *gorm.DB {
+	return utils.Db.Where("name = ?", name).First(&UserBasic{})
+}
+
+func FindUserByPhone(phone string) *gorm.DB {
+	return utils.Db.Where("phone = ?", phone).First(&UserBasic{})
 }

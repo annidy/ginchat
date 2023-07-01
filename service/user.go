@@ -4,6 +4,7 @@ import (
 	"ginchat/models"
 	"strconv"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,7 +35,7 @@ func CreateUser(ctx *gin.Context) {
 	}
 	result := models.CreateUser(&user)
 	if result.Error != nil {
-		ctx.JSON(200, gin.H{"code": 1, "message": result.Error})
+		ctx.JSON(200, gin.H{"code": 1, "message": result.Error.Error()})
 		return
 	}
 	ctx.JSON(200, gin.H{"message": user})
@@ -64,6 +65,8 @@ func DeleteUser(ctx *gin.Context) {
 // @Param        id formData integer false "id"
 // @Param        name formData string false "name"
 // @Param        password formData string false "password"
+// @Param        phone formData string false "phone"
+// @Param        email formData string false "email"
 // @Success      200  {string} json{code, message}
 // @Router       /user/updateUser [post]
 func UpdateUser(ctx *gin.Context) {
@@ -72,6 +75,13 @@ func UpdateUser(ctx *gin.Context) {
 	user.ID = uint(ID)
 	user.Name = ctx.PostForm("name")
 	user.Password = ctx.PostForm("password")
+	user.Phone = ctx.PostForm("phone")
+	user.Email = ctx.PostForm("email")
+	_, err := govalidator.ValidateStruct(&user)
+	if err != nil {
+		ctx.JSON(200, gin.H{"code": 1, "message": err.Error()})
+		return
+	}
 	models.UpdateUser(&user)
 	ctx.JSON(200, gin.H{"message": user})
 }
