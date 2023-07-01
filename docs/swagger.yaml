@@ -10,17 +10,71 @@ paths:
             type: string
       tags:
       - index
-  /user/getUser:
+  /user/createUser:
     get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
+      parameters:
+      - description: name
+        in: query
+        name: name
+        type: string
+      - description: password
+        in: query
+        name: password
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 创建用户
+      tags:
+      - 用户
+  /user/deleteUser:
+    get:
+      parameters:
+      - description: id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 删除用户
+      tags:
+      - 用户
+  /user/getUserList:
+    get:
       responses:
         "200":
           description: message"}
           schema:
             type: string
+      summary: 获取用户列表
       tags:
-      - getUser
+      - 用户
+  /user/updateUser:
+    post:
+      parameters:
+      - description: id
+        in: formData
+        name: id
+        type: integer
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: password
+        in: formData
+        name: password
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 修改用户
+      tags:
+      - 用户
 swagger: "2.0"

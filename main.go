@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"ginchat/models"
 	"ginchat/router"
 	"ginchat/utils"
 )
@@ -9,6 +10,8 @@ import (
 func main() {
 	utils.InitConfig()
 	utils.InitMySQL()
+
+	models.Init()
 
 	r := router.Router()
 	fmt.Println("Start :8080")
