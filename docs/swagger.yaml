@@ -44,6 +44,25 @@ paths:
       summary: 删除用户
       tags:
       - 用户
+  /user/getUser:
+    get:
+      parameters:
+      - description: name
+        in: query
+        name: name
+        type: string
+      - description: password
+        in: query
+        name: password
+        type: string
+      responses:
+        "200":
+          description: message"}
+          schema:
+            type: string
+      summary: 获取用户信息
+      tags:
+      - 用户
   /user/getUserList:
     get:
       responses:

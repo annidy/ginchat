@@ -6,6 +6,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // GetUserList godoc
@@ -83,5 +84,25 @@ func UpdateUser(ctx *gin.Context) {
 		return
 	}
 	models.UpdateUser(&user)
+	ctx.JSON(200, gin.H{"message": user})
+}
+
+// GetUser godoc
+// @Summary      获取用户信息
+// @Tags         用户
+// @Param        name query string false "name"
+// @Param        password query string false "password"
+// @Success      200  {string} json{"message"}
+// @Router       /user/getUser [get]
+func GetUser(ctx *gin.Context) {
+	name := ctx.Query("name")
+	password := ctx.Query("password")
+	user, err := models.FindUserByNameAndPassword(name, password)
+	if err != nil {
+		ctx.JSON(200, gin.H{"code": 1, "message": err.Error()})
+		return
+	}
+	user.Identity = uuid.New().String()
+	user.SaveIdentity()
 	ctx.JSON(200, gin.H{"message": user})
 }

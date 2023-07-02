@@ -38,6 +38,10 @@ func (user *UserBasic) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
+func (user *UserBasic) SaveIdentity() *gorm.DB {
+	return utils.Db.Model(user).Where("id = ?", user.ID).Update("identity", user.Identity)
+}
+
 func Init() {
 	utils.Db.AutoMigrate(&UserBasic{})
 }
@@ -66,4 +70,12 @@ func FindUserByName(name string) *gorm.DB {
 
 func FindUserByPhone(phone string) *gorm.DB {
 	return utils.Db.Where("phone = ?", phone).First(&UserBasic{})
+}
+
+func FindUserByNameAndPassword(name, password string) (*UserBasic, error) {
+	user := UserBasic{}
+	if utils.Db.Where("name = ? AND password = ?", name, password).First(&user).Error != nil {
+		return nil, fmt.Errorf("user name or password is wrong")
+	}
+	return &user, nil
 }
