@@ -42,10 +42,6 @@ func (user *UserBasic) SaveIdentity() *gorm.DB {
 	return utils.Db.Model(user).Where("id = ?", user.ID).Update("identity", user.Identity)
 }
 
-func Init() {
-	utils.Db.AutoMigrate(&UserBasic{})
-}
-
 func GetUserList() []*UserBasic {
 	userBasic := make([]*UserBasic, 10)
 	utils.Db.Find(&userBasic)
