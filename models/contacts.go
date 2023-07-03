@@ -5,6 +5,7 @@ import "gorm.io/gorm"
 const (
 	P2P = iota
 	GROUP
+	BROADCAST
 )
 
 type Contacts struct {

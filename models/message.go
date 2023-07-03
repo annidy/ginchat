@@ -1,12 +1,15 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Message struct {
 	gorm.Model
 	FromId   uint
 	TargetId uint
-	Type     int
+	Type     int // 0: p2p, 1: group
+	Media    int // 0: text, 1: image
 	Content  string
 }
 
