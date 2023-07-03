@@ -16,23 +16,8 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/index": {
-            "get": {
-                "tags": [
-                    "index"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/user/createUser": {
-            "get": {
+            "post": {
                 "tags": [
                     "用户"
                 ],
@@ -42,13 +27,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "name",
                         "name": "name",
-                        "in": "query"
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "password",
                         "name": "password",
-                        "in": "query"
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -86,7 +71,7 @@ const docTemplate = `{
             }
         },
         "/user/getUser": {
-            "get": {
+            "post": {
                 "tags": [
                     "用户"
                 ],
@@ -96,13 +81,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "name",
                         "name": "name",
-                        "in": "query"
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "password",
                         "name": "password",
-                        "in": "query"
+                        "in": "formData"
                     }
                 ],
                 "responses": {

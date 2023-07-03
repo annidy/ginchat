@@ -17,7 +17,7 @@ type UserBasic struct {
 	Email      string `valid:"email"`
 	ClientIp   string
 	ClientPort string
-	LoginTime  time.Time
+	LoginTime  *time.Time
 	LogoutTime *time.Time
 	IsLogout   bool
 	DeviceId   string
@@ -28,13 +28,10 @@ func (table *UserBasic) TableName() string {
 }
 
 func (user *UserBasic) BeforeCreate(tx *gorm.DB) error {
-	if FindUserByName(user.Name) != nil {
+	result := FindUserByName(user.Name)
+	if result.Error == nil {
 		return fmt.Errorf("user name %s already exists", user.Name)
 	}
-	if FindUserByPhone(user.Phone) != nil {
-		return fmt.Errorf("user phone %s already exists", user.Phone)
-	}
-	user.LoginTime = time.Now()
 	return nil
 }
 

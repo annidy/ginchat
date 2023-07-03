@@ -1,24 +1,15 @@
 info:
   contact: {}
 paths:
-  /index:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      tags:
-      - index
   /user/createUser:
-    get:
+    post:
       parameters:
       - description: name
-        in: query
+        in: formData
         name: name
         type: string
       - description: password
-        in: query
+        in: formData
         name: password
         type: string
       responses:
@@ -45,14 +36,14 @@ paths:
       tags:
       - 用户
   /user/getUser:
-    get:
+    post:
       parameters:
       - description: name
-        in: query
+        in: formData
         name: name
         type: string
       - description: password
-        in: query
+        in: formData
         name: password
         type: string
       responses:

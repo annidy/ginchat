@@ -22,14 +22,14 @@ func GetUserList(ctx *gin.Context) {
 // CreateUser godoc
 // @Summary      创建用户
 // @Tags         用户
-// @Param        name query string false "name"
-// @Param        password query string false "password"
+// @Param        name formData string false "name"
+// @Param        password formData string false "password"
 // @Success      200  {string} json{code, message}
-// @Router       /user/createUser [get]
+// @Router       /user/createUser [post]
 func CreateUser(ctx *gin.Context) {
 	user := models.UserBasic{}
-	user.Name = ctx.Query("name")
-	user.Password = ctx.Query("password")
+	user.Name = ctx.PostForm("name")
+	user.Password = ctx.PostForm("password")
 	if user.Name == "" || user.Password == "" {
 		ctx.JSON(200, gin.H{"code": 1, "message": "name or password is empty"})
 		return
@@ -39,7 +39,7 @@ func CreateUser(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"code": 1, "message": result.Error.Error()})
 		return
 	}
-	ctx.JSON(200, gin.H{"message": user})
+	ctx.JSON(200, gin.H{"code": 0, "data": user})
 }
 
 // CreateUser godoc
@@ -57,7 +57,7 @@ func DeleteUser(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"code": 1, "message": result.Error})
 		return
 	}
-	ctx.JSON(200, gin.H{"message": "success"})
+	ctx.JSON(200, gin.H{"code": 0, "message": "success"})
 }
 
 // UpdateUser godoc
@@ -84,19 +84,19 @@ func UpdateUser(ctx *gin.Context) {
 		return
 	}
 	models.UpdateUser(&user)
-	ctx.JSON(200, gin.H{"message": user})
+	ctx.JSON(200, gin.H{"code": 0, "data": user})
 }
 
 // GetUser godoc
 // @Summary      获取用户信息
 // @Tags         用户
-// @Param        name query string false "name"
-// @Param        password query string false "password"
+// @Param        name formData string false "name"
+// @Param        password formData string false "password"
 // @Success      200  {string} json{"message"}
-// @Router       /user/getUser [get]
+// @Router       /user/getUser [post]
 func GetUser(ctx *gin.Context) {
-	name := ctx.Query("name")
-	password := ctx.Query("password")
+	name := ctx.PostForm("name")
+	password := ctx.PostForm("password")
 	user, err := models.FindUserByNameAndPassword(name, password)
 	if err != nil {
 		ctx.JSON(200, gin.H{"code": 1, "message": err.Error()})
@@ -104,5 +104,5 @@ func GetUser(ctx *gin.Context) {
 	}
 	user.Identity = uuid.New().String()
 	user.SaveIdentity()
-	ctx.JSON(200, gin.H{"message": user})
+	ctx.JSON(200, gin.H{"code": 0, "data": user})
 }
