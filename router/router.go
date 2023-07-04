@@ -19,7 +19,10 @@ func Router() *gin.Engine {
 	r.GET("/user/deleteUser", service.DeleteUser)
 	r.POST("/user/updateUser", service.UpdateUser)
 
-	r.GET("/message/sendMsg", service.SendMsg)
+	r.POST("/searchFriends", service.SearchFriends)
+	r.POST("/contact/addfriend", service.AddFriend)
+
+	r.GET("/chat", service.Chat)
 
 	// 静态文件
 	r.Static("/asset", "asset/")
@@ -27,6 +30,7 @@ func Router() *gin.Engine {
 	r.GET("/", service.GetIndex)
 	r.GET("/index", service.GetIndex)
 	r.GET("/toRegister", service.ToRegister)
+	r.GET("/toChat", service.ToChat)
 
 	return r
 }

@@ -28,8 +28,8 @@ func (table *UserBasic) TableName() string {
 }
 
 func (user *UserBasic) BeforeCreate(tx *gorm.DB) error {
-	result := FindUserByName(user.Name)
-	if result.Error == nil {
+	_, err := FindUserByName(user.Name)
+	if err == nil {
 		return fmt.Errorf("user name %s already exists", user.Name)
 	}
 	return nil
@@ -57,12 +57,16 @@ func UpdateUser(user *UserBasic) *gorm.DB {
 	return utils.Db.Save(user)
 }
 
-func FindUserByName(name string) *gorm.DB {
-	return utils.Db.Where("name = ?", name).First(&UserBasic{})
+func FindUserByName(name string) (UserBasic, error) {
+	user := UserBasic{}
+	res := utils.Db.Where("name = ?", name).First(&user)
+	return user, res.Error
 }
 
-func FindUserByPhone(phone string) *gorm.DB {
-	return utils.Db.Where("phone = ?", phone).First(&UserBasic{})
+func FindUserByPhone(phone string) (UserBasic, error) {
+	user := UserBasic{}
+	res := utils.Db.Where("phone = ?", phone).First(&user)
+	return user, res.Error
 }
 
 func FindUserByNameAndPassword(name, password string) (*UserBasic, error) {

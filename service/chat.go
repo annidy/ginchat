@@ -20,7 +20,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func SendMsg(c *gin.Context) {
+func Chat(c *gin.Context) {
 	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -163,7 +163,7 @@ func dispatch(p []byte) {
 	}
 	fmt.Println("dispatch", msg)
 	switch msg.Type {
-	case models.P2P:
+	case models.Friend:
 		sendP2PMsg(msg.FromId, msg.TargetId, []byte(msg.Content))
 		// case models.GROUP: sendGroupMsg(msg)
 		// case models.BROADCAST: sendBroadCastMsg(msg)

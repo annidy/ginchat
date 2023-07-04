@@ -104,6 +104,30 @@
                 }
             }
         },
+        "/user/searchFriends": {
+            "post": {
+                "tags": [
+                    "用户"
+                ],
+                "summary": "获取用户好友信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "userId",
+                        "name": "userId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/updateUser": {
             "post": {
                 "tags": [

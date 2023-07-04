@@ -1,11 +1,9 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"ginchat/utils"
 
-const (
-	P2P = iota
-	GROUP
-	BROADCAST
+	"gorm.io/gorm"
 )
 
 type Contacts struct {
@@ -17,4 +15,29 @@ type Contacts struct {
 
 func (table *Contacts) TableName() string {
 	return "contacts"
+}
+
+func SearchFriends(userId uint) []UserBasic {
+	return Search(userId, Friend)
+}
+
+func Search(userId uint, ctype int) []UserBasic {
+	contacts := make([]Contacts, 0)
+	utils.Db.Where("owner_id = ? and type = ?", userId, ctype).Find(&contacts)
+
+	uids := make([]uint, 0)
+	for _, v := range contacts {
+		uids = append(uids, v.TargetId)
+	}
+	users := make([]UserBasic, 0)
+	utils.Db.Where("id in (?)", uids).Find(&users)
+	return users
+}
+
+func AddFriend(userId uint, targetId uint) *gorm.DB {
+	return utils.Db.Create(&Contacts{
+		OwnerId:  userId,
+		TargetId: targetId,
+		Type:     Friend,
+	})
 }

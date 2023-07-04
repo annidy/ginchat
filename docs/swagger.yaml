@@ -64,6 +64,21 @@ paths:
       summary: 获取用户列表
       tags:
       - 用户
+  /user/searchFriends:
+    post:
+      parameters:
+      - description: userId
+        in: query
+        name: userId
+        type: string
+      responses:
+        "200":
+          description: message"}
+          schema:
+            type: string
+      summary: 获取用户好友信息
+      tags:
+      - 用户
   /user/updateUser:
     post:
       parameters:
