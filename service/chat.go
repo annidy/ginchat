@@ -86,7 +86,7 @@ func sendProc(node *Node) {
 
 	for {
 		msg := <-node.DataQueue
-		fmt.Println("sendProc <-", msg)
+		fmt.Println("sendProc <-", string(msg))
 		err := node.Conn.WriteMessage(websocket.TextMessage, msg)
 		if err != nil {
 			fmt.Println(err)
@@ -161,10 +161,9 @@ func dispatch(p []byte) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("dispatch", msg)
 	switch msg.Type {
 	case models.Friend:
-		sendP2PMsg(msg.FromId, msg.TargetId, []byte(msg.Content))
+		sendP2PMsg(msg.FromId, msg.TargetId, p)
 		// case models.GROUP: sendGroupMsg(msg)
 		// case models.BROADCAST: sendBroadCastMsg(msg)
 	}
@@ -175,7 +174,9 @@ func sendP2PMsg(fromId uint, targetId uint, data []byte) {
 	node, ok := clientMap[targetId]
 	rwLocker.RUnlock()
 	if !ok {
+		fmt.Println("对方不在线, targetId = ", targetId)
 		return
 	}
+	fmt.Println("sendP2PMsg", fromId, targetId, string(data))
 	node.DataQueue <- data
 }

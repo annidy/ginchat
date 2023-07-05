@@ -18,7 +18,7 @@ func SearchFriends(ctx *gin.Context) {
 	userId := utils.Atou(ctx.PostForm("userId"))
 	// TODO: 校验token
 	users := models.SearchFriends(userId)
-	utils.RespOkList(ctx.Writer, users, users)
+	utils.RespOkList(ctx.Writer, users, len(users))
 }
 
 func AddFriend(ctx *gin.Context) {
