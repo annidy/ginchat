@@ -19,7 +19,7 @@ func Resp(w http.ResponseWriter, code int, data interface{}, msg string) {
 	w.WriteHeader(http.StatusOK)
 	h := H{
 		Code:    code,
-		Rows:    data,
+		Data:    data,
 		Message: msg,
 	}
 	ret, err := json.Marshal(h)
