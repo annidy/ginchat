@@ -27,13 +27,27 @@ func AddFriend(ctx *gin.Context) {
 
 	targetUser, err := models.FindUserByName(targetName)
 	if err != nil {
-		ctx.JSON(200, gin.H{"code": 1, "message": fmt.Sprintf("user %s not found", targetName)})
+		utils.RespFail(ctx.Writer, fmt.Sprintf("user %s not found", targetName))
 		return
 	}
-	res := models.AddFriend(userId, targetUser.ID)
-	if res.Error != nil {
-		ctx.JSON(200, gin.H{"code": 1, "message": res.Error.Error()})
+	if targetUser.ID == userId {
+		utils.RespFail(ctx.Writer, "can't add yourself as friend")
 		return
 	}
-	ctx.JSON(200, gin.H{"code": 0, "message": "success"})
+	friends := models.SearchFriends(userId)
+	for _, f := range friends {
+		if f.ID == targetUser.ID {
+			utils.RespFail(ctx.Writer, "already friends")
+			return
+		}
+	}
+	if err := models.AddFriend(userId, targetUser.ID); err != nil {
+		utils.RespFail(ctx.Writer, err.Error())
+		return
+	}
+	utils.RespOk(ctx.Writer, nil, "success")
+}
+
+func CreateCommunity(ctx *gin.Context) {
+
 }

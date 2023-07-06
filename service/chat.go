@@ -163,7 +163,7 @@ func dispatch(p []byte) {
 	}
 	switch msg.Type {
 	case models.Friend:
-		sendP2PMsg(msg.FromId, msg.TargetId, p)
+		sendP2PMsg(msg.UserId, msg.TargetId, p)
 		// case models.GROUP: sendGroupMsg(msg)
 		// case models.BROADCAST: sendBroadCastMsg(msg)
 	}

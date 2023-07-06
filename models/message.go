@@ -12,7 +12,7 @@ const (
 
 type Message struct {
 	gorm.Model
-	FromId   uint
+	UserId   uint
 	TargetId uint
 	Type     int // 0: friend, 1: group, 3: 心跳
 	Media    int // 0: text, 1: image, 4: 表情

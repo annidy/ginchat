@@ -34,10 +34,32 @@ func Search(userId uint, ctype int) []UserBasic {
 	return users
 }
 
-func AddFriend(userId uint, targetId uint) *gorm.DB {
-	return utils.Db.Create(&Contacts{
+func AddFriend(userId uint, targetId uint) error {
+	return AddContact(userId, targetId, Friend)
+}
+
+func AddContact(userId uint, targetId uint, contactType int) error {
+	tx := utils.Db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := utils.Db.Create(&Contacts{
 		OwnerId:  userId,
 		TargetId: targetId,
-		Type:     Friend,
-	})
+		Type:     contactType,
+	}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err := utils.Db.Create(&Contacts{
+		OwnerId:  targetId,
+		TargetId: userId,
+		Type:     contactType,
+	}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
 }

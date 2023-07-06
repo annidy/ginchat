@@ -7,20 +7,20 @@ import (
 )
 
 type H struct {
-	Code    int
-	Message string
-	Data    interface{}
-	Rows    interface{}
-	Total   interface{}
+	Code  int
+	Msg   string
+	Data  interface{}
+	Rows  interface{}
+	Total interface{}
 }
 
 func Resp(w http.ResponseWriter, code int, data interface{}, msg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	h := H{
-		Code:    code,
-		Data:    data,
-		Message: msg,
+		Code: code,
+		Data: data,
+		Msg:  msg,
 	}
 	ret, err := json.Marshal(h)
 	if err != nil {
