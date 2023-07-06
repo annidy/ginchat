@@ -23,6 +23,9 @@ func Router() *gin.Engine {
 	r.POST("/contact/addfriend", service.AddFriend)
 	r.POST("/attach/upload", service.Upload)
 
+	r.POST("/contact/createCommunity", service.CreateCommunity)
+	r.POST("/contact/loadcommunity", service.LoadCommunity)
+
 	r.GET("/chat", service.Chat)
 
 	// 静态文件

@@ -47,7 +47,3 @@ func AddFriend(ctx *gin.Context) {
 	}
 	utils.RespOk(ctx.Writer, nil, "success")
 }
-
-func CreateCommunity(ctx *gin.Context) {
-
-}

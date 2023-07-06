@@ -7,4 +7,5 @@ func Init() {
 	utils.Db.AutoMigrate(&Message{})
 	utils.Db.AutoMigrate(&GroupBasic{})
 	utils.Db.AutoMigrate(&Contacts{})
+	utils.Db.AutoMigrate(&Community{})
 }
