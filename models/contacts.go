@@ -53,13 +53,15 @@ func AddContact(userId uint, targetId uint, contactType int) error {
 		tx.Rollback()
 		return err
 	}
-	if err := utils.Db.Create(&Contacts{
-		OwnerId:  targetId,
-		TargetId: userId,
-		Type:     contactType,
-	}).Error; err != nil {
-		tx.Rollback()
-		return err
+	if contactType == Friend {
+		if err := utils.Db.Create(&Contacts{
+			OwnerId:  targetId,
+			TargetId: userId,
+			Type:     contactType,
+		}).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
 	}
 	return tx.Commit().Error
 }

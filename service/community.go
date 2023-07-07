@@ -28,3 +28,13 @@ func LoadCommunity(ctx *gin.Context) {
 	communities, _ := models.LoadCommunity(ownerId)
 	utils.RespOkList(ctx.Writer, communities, len(communities))
 }
+
+func JoinGroup(ctx *gin.Context) {
+	userId := utils.Atou(ctx.PostForm("userId"))
+	name := ctx.PostForm("comId")
+	if err := models.JoinGroup(userId, name); err != nil {
+		utils.RespFail(ctx.Writer, err.Error())
+		return
+	}
+	utils.RespOk(ctx.Writer, nil, "success")
+}
