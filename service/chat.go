@@ -164,7 +164,8 @@ func dispatch(p []byte) {
 	switch msg.Type {
 	case models.Friend:
 		sendP2PMsg(msg.UserId, msg.TargetId, p)
-		// case models.GROUP: sendGroupMsg(msg)
+	case models.GROUP:
+		sendGroupMsg(msg.UserId, msg.TargetId, p)
 		// case models.BROADCAST: sendBroadCastMsg(msg)
 	}
 }
@@ -179,4 +180,15 @@ func sendP2PMsg(fromId uint, targetId uint, data []byte) {
 	}
 	fmt.Println("sendP2PMsg", fromId, targetId, string(data))
 	node.DataQueue <- data
+}
+
+func sendGroupMsg(fromId uint, targetId uint, data []byte) {
+	// TODO: 性能不好，每次都要查群里的所有人
+	fmt.Println("sendGroupMsg", fromId, targetId, string(data))
+	contacts := models.ContactsOfCommunity(targetId)
+	for _, c := range contacts {
+		if c.OwnerId != fromId {
+			sendP2PMsg(fromId, c.OwnerId, data)
+		}
+	}
 }

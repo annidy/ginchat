@@ -65,3 +65,9 @@ func AddContact(userId uint, targetId uint, contactType int) error {
 	}
 	return tx.Commit().Error
 }
+
+func ContactsOfCommunity(communityId uint) []Contacts {
+	contacts := make([]Contacts, 0)
+	utils.Db.Where("target_id = ? and type = ?", communityId, GROUP).Find(&contacts)
+	return contacts
+}

@@ -316,9 +316,9 @@
                         var msg = this.createmsgcontext();
                         msg.Media = 1;
                         msg.Content = txt;
-                        if (msg.Type == 1) {
+                        // if (msg.Type == 1) {
                             this.showmsg(userInfo(), msg);
-                        }
+                        // }
 
                         this.webSocket.send(JSON.stringify(msg))
                     }
