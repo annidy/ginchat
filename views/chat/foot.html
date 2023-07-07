@@ -82,7 +82,7 @@
                     TargetId: -1,
                     Type: -1,
                     CreateTime: new Date().getTime(),
-                    userId: userId()
+                    UserId: userId()
                 },
                 plugins: [
                     {
@@ -270,7 +270,7 @@
                     // console.log(">>>>>>>>>>>", msg)
                     var data = {
                     }
-                    data.ismine = userId() == msg.userId;
+                    data.ismine = userId() == msg.UserId;
                     //console.log(data.ismine,userId(),msg.userid)
                     data.user = user;
                     data.msg = msg;
@@ -365,8 +365,8 @@
                         if (this.isReadRedisMsg.filter(item => item === user.ID).length <= 0) {
                             post("user/redisMsg", { userIdA: userId(), userIdB: user.ID, start: this.start, end: this.end, isRev: false }, function (res) {
                                 //循环读取的消息记录 并显示
-                                for (var i in res.Total) {
-                                    this.showmsg(user, JSON.parse(res.Total[i]), false, true)
+                                for (var i in res.Rows) {
+                                    this.showmsg(user, JSON.parse(res.Rows[i]), false, true)
                                 }
                             }.bind(this))
                             this.isReadRedisMsg.push(user.ID)
@@ -435,11 +435,11 @@
                     }
                 },
                 onmessage: function (data) {
-                    this.loaduserinfo(data.userId, function (user) {
+                    this.loaduserinfo(data.UserId, function (user) {
 
                         this.showmsg(user, data)
                         this.friends.map((item) => {
-                            if (item.ID == data.userId) {
+                            if (item.ID == data.UserId) {
                                 // 1文字 2表情包 3图片 4音频
                                 if (data.Media === 1) {
                                     item.memo = data.Content

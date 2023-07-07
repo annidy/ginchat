@@ -10,6 +10,7 @@ import (
 func main() {
 	utils.InitConfig()
 	utils.InitMySQL()
+	utils.InitRedies()
 
 	models.Init()
 

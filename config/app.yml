@@ -6,3 +6,10 @@ database:
   username: root
   password: 1234
   database: ginchat
+redis:
+  host: redis626 #localhost
+  port: 6379
+  pool_size: 100
+  db: 0
+  username: 
+  password: 

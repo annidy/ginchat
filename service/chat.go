@@ -1,15 +1,19 @@
 package service
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"ginchat/models"
+	"ginchat/utils"
 	"net"
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/websocket"
 	"gopkg.in/fatih/set.v0"
 )
@@ -156,11 +160,13 @@ func udpRecvProc() {
 
 func dispatch(p []byte) {
 	msg := models.Message{}
+	msg.CreateTime = time.Now().Unix()
 	err := json.Unmarshal(p, &msg)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
 	switch msg.Type {
 	case models.Friend:
 		sendP2PMsg(msg.UserId, msg.TargetId, p)
@@ -174,6 +180,17 @@ func sendP2PMsg(fromId uint, targetId uint, data []byte) {
 	rwLocker.RLock()
 	node, ok := clientMap[targetId]
 	rwLocker.RUnlock()
+	// 写Redis中的消息
+	var key string
+	if fromId > targetId {
+		key = fmt.Sprintf("msg_%d_%d", targetId, fromId)
+	} else {
+		key = fmt.Sprintf("msg_%d_%d", fromId, targetId)
+	}
+	if _, err := utils.Rdb.ZAdd(context.Background(), key, &redis.Z{Score: float64(time.Now().Unix()), Member: data}).Result(); err != nil {
+		fmt.Println(err)
+	}
+
 	if !ok {
 		fmt.Println("对方不在线, targetId = ", targetId)
 		return
@@ -191,4 +208,25 @@ func sendGroupMsg(fromId uint, targetId uint, data []byte) {
 			sendP2PMsg(fromId, c.OwnerId, data)
 		}
 	}
+}
+
+func RedisMsg(ctx *gin.Context) {
+	userIdA := utils.Atou(ctx.PostForm("userIdA"))
+	userIdB := utils.Atou(ctx.PostForm("userIdB"))
+	start, _ := strconv.ParseInt(ctx.PostForm("start"), 10, 64)
+	end, _ := strconv.ParseInt(ctx.PostForm("end"), 10, 64)
+	// 读Redis中的消息
+	var key string
+	if userIdA > userIdB {
+		key = fmt.Sprintf("msg_%d_%d", userIdB, userIdA)
+	} else {
+		key = fmt.Sprintf("msg_%d_%d", userIdA, userIdB)
+	}
+	// 从Redis中获取
+	msgs, err := utils.Rdb.ZRevRange(context.Background(), key, start, end).Result()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	utils.RespOkList(ctx.Writer, msgs, len(msgs))
 }
