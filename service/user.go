@@ -2,6 +2,7 @@ package service
 
 import (
 	"ginchat/models"
+	"ginchat/utils"
 	"strconv"
 
 	"github.com/asaskevich/govalidator"
@@ -71,20 +72,26 @@ func DeleteUser(ctx *gin.Context) {
 // @Success      200  {string} json{code, message}
 // @Router       /user/updateUser [post]
 func UpdateUser(ctx *gin.Context) {
-	user := models.UserBasic{}
 	ID, _ := strconv.Atoi(ctx.PostForm("id"))
-	user.ID = uint(ID)
+	user, err := models.FindUserById(uint(ID))
+	if err != nil {
+		utils.RespFail(ctx.Writer, err.Error())
+		return
+	}
 	user.Name = ctx.PostForm("name")
 	user.Password = ctx.PostForm("password")
 	user.Phone = ctx.PostForm("phone")
 	user.Email = ctx.PostForm("email")
-	_, err := govalidator.ValidateStruct(&user)
-	if err != nil {
-		ctx.JSON(200, gin.H{"code": 1, "message": err.Error()})
+	user.Icon = ctx.PostForm("icon")
+	if _, err := govalidator.ValidateStruct(&user); err != nil {
+		utils.RespFail(ctx.Writer, err.Error())
 		return
 	}
-	models.UpdateUser(&user)
-	ctx.JSON(200, gin.H{"code": 0, "data": user})
+	if err := models.UpdateUser(&user).Error; err != nil {
+		utils.RespFail(ctx.Writer, err.Error())
+		return
+	}
+	utils.RespOk(ctx.Writer, user, "success")
 }
 
 // GetUser godoc

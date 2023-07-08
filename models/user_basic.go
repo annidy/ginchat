@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"ginchat/utils"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -15,12 +14,13 @@ type UserBasic struct {
 	Password   string
 	Phone      string `valid:"matches(^1[0-9]{10}$)"`
 	Email      string `valid:"email"`
+	Icon       string
 	ClientIp   string
 	ClientPort string
-	LoginTime  *time.Time
-	LogoutTime *time.Time
-	IsLogout   bool
-	DeviceId   string
+	// LoginTime  *time.Time
+	// LogoutTime *time.Time
+	IsLogout bool
+	DeviceId string
 }
 
 func (table *UserBasic) TableName() string {
@@ -60,6 +60,12 @@ func UpdateUser(user *UserBasic) *gorm.DB {
 func FindUserByName(name string) (UserBasic, error) {
 	user := UserBasic{}
 	res := utils.Db.Where("name = ?", name).First(&user)
+	return user, res.Error
+}
+
+func FindUserById(id uint) (UserBasic, error) {
+	user := UserBasic{}
+	res := utils.Db.Where("ID = ?", id).First(&user)
 	return user, res.Error
 }
 

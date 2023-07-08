@@ -155,10 +155,10 @@
             methods: {
                 initUser() {
                     let userInfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}');
-                    this.info.icon = userInfo.Avatar;
+                    this.info.icon = userInfo.Icon;
                     this.info.name = userInfo.Name;
                     this.info.id = userInfo.ID;
-                    this.profile.avatar = userInfo.Avatar;
+                    this.profile.avatar = userInfo.Icon;
                     this.profile.nickname = userInfo.Name;
                 },
                 playaudio: function (url) {
@@ -376,7 +376,7 @@
                         //console.log(user)
                         this.win = "single";
                         this.title = "和" + user.Name + "聊天中";
-                        this.otherAvatar = user.Avatar;
+                        this.otherAvatar = user.Icon;
                         this.msgcontext.TargetId = parseInt(user.ID);
                         this.msgcontext.Type = 1;
                         mui('.mui-scroll-wrapper').scroll({
